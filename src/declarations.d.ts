@@ -20,6 +20,6 @@ declare module 'ipfs-http-gateway' {
     }
 }
 
-export default class IpfsInstance {
+export default class IPFSInstance {
     isOnline(): boolean;
 }
