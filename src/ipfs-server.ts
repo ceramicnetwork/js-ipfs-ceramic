@@ -49,7 +49,7 @@ export default class IPFSServer {
                 config: {
                     dht: {
                         enabled: true,
-                        clientMode: true,
+                        clientMode: false,
                     },
                 },
             },
