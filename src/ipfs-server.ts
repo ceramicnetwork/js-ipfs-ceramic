@@ -1,4 +1,6 @@
 import IPFS from 'ipfs'
+import { IPFSApi } from "./declarations"
+
 import HttpApi from 'ipfs-http-server'
 import HttpGateway from 'ipfs-http-gateway'
 
@@ -42,7 +44,7 @@ export default class IPFSServer {
         multiformats.multicodec.add(dagJose)
         const format = legacy(multiformats, dagJose.name)
 
-        const ipfs = await IPFS.create({
+        const ipfs: IPFSApi = await IPFS.create({
             repo,
             ipld: { formats: [format] },
             libp2p: {
