@@ -1,14 +1,13 @@
 import os from 'os-utils'
 import express from "express"
-
-import IPFSInstance from "./declarations"
+import { IPFSApi } from "./declarations"
 
 const HEALTHCHECK_ENABLED = 'HEALTHCHECK_ENABLED' in process.env? process.env.HEALTHCHECK_ENABLED : false
 const HEALTHCHECK_PORT = process.env.HEALTHCHECK_PORT != null ? parseInt(process.env.HEALTHCHECK_PORT) : 8011
 
 export default class HealthcheckServer {
 
-    static start(ipfs: IPFSInstance): void {
+    static start(ipfs: IPFSApi): void {
         if (!HEALTHCHECK_ENABLED) {
             return
         }
