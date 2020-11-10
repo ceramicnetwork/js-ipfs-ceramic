@@ -12,9 +12,10 @@ import legacy from 'multiformats/legacy'
 
 import { createRepo } from 'datastore-s3'
 import HealthcheckServer from "./healthcheck-server"
+import { toBoolean } from "./utils"
 
 const IPFS_PATH = process.env.IPFS_PATH || 'ipfs'
-const IPFS_S3_REPO_ENABLED = 'IPFS_S3_REPO_ENABLED' in process.env? process.env.IPFS_S3_REPO_ENABLED : false
+const IPFS_S3_REPO_ENABLED = 'IPFS_S3_REPO_ENABLED' in process.env? toBoolean(process.env.IPFS_S3_REPO_ENABLED) : false
 
 const { AWS_BUCKET_NAME } = process.env
 const { AWS_ACCESS_KEY_ID } = process.env
