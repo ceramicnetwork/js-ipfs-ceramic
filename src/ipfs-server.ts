@@ -26,7 +26,7 @@ const IPFS_SWARM_WS_PORT = process.env.IPFS_SWARM_WS_PORT || 4012
 const IPFS_API_PORT = process.env.IPFS_API_PORT || 5011
 const IPFS_GATEWAY_PORT = process.env.IPFS_GATEWAY_PORT || 9011
 
-const IPFS_DHT_CLIENT_MODE = process.env.IPFS_DHT_CLIENT_MODE === 'true'
+const IPFS_DHT_SERVER_MODE = process.env.IPFS_DHT_SERVER_MODE === 'true'
 
 export default class IPFSServer {
 
@@ -53,7 +53,7 @@ export default class IPFSServer {
                 config: {
                     dht: {
                         enabled: true,
-                        clientMode: IPFS_DHT_CLIENT_MODE,
+                        clientMode: !IPFS_DHT_SERVER_MODE,
                         randomWalk: true,
                     },
                 },
@@ -68,7 +68,7 @@ export default class IPFSServer {
                     Gateway: `/ip4/0.0.0.0/tcp/${IPFS_GATEWAY_PORT}`,
                 },
                 Routing: {
-                    Type: IPFS_DHT_CLIENT_MODE? 'dhtclient' : 'dhtserver',
+                    Type: IPFS_DHT_SERVER_MODE ? 'dhtserver' : 'dhtclient',
                 },
             },
         })
