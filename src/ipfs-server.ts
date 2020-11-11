@@ -25,6 +25,7 @@ const IPFS_SWARM_TCP_PORT = process.env.IPFS_SWARM_TCP_PORT || 4011
 const IPFS_SWARM_WS_PORT = process.env.IPFS_SWARM_WS_PORT || 4012
 
 const IPFS_API_PORT = process.env.IPFS_API_PORT || 5011
+const IPFS_API_ONLY = toBoolean(process.env.IPFS_API_ONLY) || false
 const IPFS_GATEWAY_PORT = process.env.IPFS_GATEWAY_PORT || 9011
 const IPFS_GATEWAY_ONLY = toBoolean(process.env.IPFS_GATEWAY_ONLY) || false
 
@@ -79,8 +80,10 @@ export default class IPFSServer {
           await new HttpApi(ipfs).start()
           console.log('IPFS API server listening on ' + IPFS_API_PORT)
         }
-        await new HttpGateway(ipfs).start()
-        console.log('IPFS Gateway server listening on ' + IPFS_GATEWAY_PORT)
+        if (!IPFS_API_ONLY) {
+          await new HttpGateway(ipfs).start()
+          console.log('IPFS Gateway server listening on ' + IPFS_GATEWAY_PORT)
+        }
 
         HealthcheckServer.start(ipfs)
     }
