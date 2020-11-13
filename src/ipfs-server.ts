@@ -11,10 +11,10 @@ import multiformats from 'multiformats/basics'
 import legacy from 'multiformats/legacy'
 
 import { createRepo } from 'datastore-s3'
-import HealthcheckServer from "./healthcheck-server"
+import HealthcheckServer from './healthcheck-server'
 
 const IPFS_PATH = process.env.IPFS_PATH || 'ipfs'
-const IPFS_S3_REPO_ENABLED = 'IPFS_S3_REPO_ENABLED' in process.env? process.env.IPFS_S3_REPO_ENABLED : false
+const IPFS_S3_REPO_ENABLED = process.env.IPFS_S3_REPO_ENABLED === 'true'
 
 const { AWS_BUCKET_NAME } = process.env
 const { AWS_ACCESS_KEY_ID } = process.env
@@ -24,7 +24,9 @@ const IPFS_SWARM_TCP_PORT = process.env.IPFS_SWARM_TCP_PORT || 4011
 const IPFS_SWARM_WS_PORT = process.env.IPFS_SWARM_WS_PORT || 4012
 
 const IPFS_API_PORT = process.env.IPFS_API_PORT || 5011
+const IPFS_API_ONLY = process.env.IPFS_API_ONLY === 'true'
 const IPFS_GATEWAY_PORT = process.env.IPFS_GATEWAY_PORT || 9011
+const IPFS_GATEWAY_ONLY = process.env.IPFS_GATEWAY_ONLY === 'true'
 
 const IPFS_DHT_SERVER_MODE = process.env.IPFS_DHT_SERVER_MODE === 'true'
 
@@ -73,10 +75,14 @@ export default class IPFSServer {
             },
         })
 
-        await new HttpApi(ipfs).start()
-        console.log('IPFS API server listening on ' + IPFS_API_PORT)
-        await new HttpGateway(ipfs).start()
-        console.log('IPFS Gateway server listening on ' + IPFS_GATEWAY_PORT)
+        if (!IPFS_GATEWAY_ONLY) {
+          await new HttpApi(ipfs).start()
+          console.log('IPFS API server listening on ' + IPFS_API_PORT)
+        }
+        if (!IPFS_API_ONLY) {
+          await new HttpGateway(ipfs).start()
+          console.log('IPFS Gateway server listening on ' + IPFS_GATEWAY_PORT)
+        }
 
         HealthcheckServer.start(ipfs)
     }
