@@ -13,6 +13,8 @@ import legacy from 'multiformats/legacy'
 import { createRepo } from 'datastore-s3'
 import HealthcheckServer from './healthcheck-server'
 
+const TCP_HOST = process.env.TCP_HOST || '0.0.0.0'
+
 const IPFS_PATH = process.env.IPFS_PATH || 'ipfs'
 const IPFS_S3_REPO_ENABLED = process.env.IPFS_S3_REPO_ENABLED === 'true'
 
@@ -63,11 +65,11 @@ export default class IPFSServer {
             config: {
                 Addresses: {
                     Swarm: [
-                        `/ip4/0.0.0.0/tcp/${IPFS_SWARM_TCP_PORT}`,
-                        `/ip4/0.0.0.0/tcp/${IPFS_SWARM_WS_PORT}/ws`,
+                        `/ip4/${TCP_HOST}/tcp/${IPFS_SWARM_TCP_PORT}`,
+                        `/ip4/${TCP_HOST}/tcp/${IPFS_SWARM_WS_PORT}/ws`,
                     ],
-                    API: `/ip4/0.0.0.0/tcp/${IPFS_API_PORT}`,
-                    Gateway: `/ip4/0.0.0.0/tcp/${IPFS_GATEWAY_PORT}`,
+                    API: `/ip4/${TCP_HOST}/tcp/${IPFS_API_PORT}`,
+                    Gateway: `/ip4/${TCP_HOST}/tcp/${IPFS_GATEWAY_PORT}`,
                 },
                 Routing: {
                     Type: IPFS_DHT_SERVER_MODE ? 'dhtserver' : 'dhtclient',
