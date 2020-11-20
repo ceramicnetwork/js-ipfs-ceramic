@@ -15,14 +15,14 @@ export default class HealthcheckServer {
 
         app.get('/', async (req, res) => {
             if (!ipfs.isOnline()) {
-                return res.status(503).send()
+                return res.status(503).send("Service offline")
             }
             const cpuFree: number = await new Promise((resolve) => os.cpuFree(resolve))
             const memFree = os.freememPercentage()
             if (cpuFree < 0.05 || memFree < 0.20) {
-                return res.status(503).send()
+                return res.status(503).send("Insufficient memory")
             }
-            return res.status(200).send()
+            return res.status(200).send("Alive")
         })
 
         app.listen(HEALTHCHECK_PORT, () => {
