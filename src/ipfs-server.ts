@@ -1,5 +1,7 @@
 import IPFS from 'ipfs'
-import { IPFSApi } from "./declarations"
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import type { IPFSAPI as IpfsApi } from 'ipfs-core/dist/src/components'
 
 import HttpApi from 'ipfs-http-server'
 import HttpGateway from 'ipfs-http-gateway'
@@ -21,18 +23,18 @@ const IPFS_S3_REPO_ENABLED = process.env.IPFS_S3_REPO_ENABLED === 'true'
 const { AWS_BUCKET_NAME } = process.env
 const { AWS_ACCESS_KEY_ID } = process.env
 const { AWS_SECRET_ACCESS_KEY } = process.env
+const { ANNOUNCE_ADDRESS_LIST } = process.env
 
 const IPFS_SWARM_TCP_PORT = process.env.IPFS_SWARM_TCP_PORT || 4011
 const IPFS_SWARM_WS_PORT = process.env.IPFS_SWARM_WS_PORT || 4012
 
 const IPFS_API_PORT = process.env.IPFS_API_PORT || 5011
-const IPFS_API_ONLY = process.env.IPFS_API_ONLY === 'true'
+const IPFS_ENABLE_API = process.env.IPFS_ENABLE_API === 'true'
+
 const IPFS_GATEWAY_PORT = process.env.IPFS_GATEWAY_PORT || 9011
-const IPFS_GATEWAY_ONLY = process.env.IPFS_GATEWAY_ONLY === 'true'
+const IPFS_ENABLE_GATEWAY = process.env.IPFS_ENABLE_GATEWAY === 'false'
 
 const IPFS_DHT_SERVER_MODE = process.env.IPFS_DHT_SERVER_MODE === 'true'
-
-const ANNOUNCE_ADDRESS_LIST = process.env.ANNOUNCE_ADDRESS_LIST
 
 export default class IPFSServer {
 
@@ -53,7 +55,7 @@ export default class IPFSServer {
         const format = legacy(multiformats, dagJose.name)
 
         const announceAddresses = ANNOUNCE_ADDRESS_LIST != null ? ANNOUNCE_ADDRESS_LIST.split(',') : []
-        const ipfs: IPFSApi = await IPFS.create({
+        const ipfs: IpfsApi = await IPFS.create({
             repo,
             ipld: { formats: [format] },
             libp2p: {
@@ -74,8 +76,9 @@ export default class IPFSServer {
                         `/ip4/${TCP_HOST}/tcp/${IPFS_SWARM_TCP_PORT}`,
                         `/ip4/${TCP_HOST}/tcp/${IPFS_SWARM_WS_PORT}/ws`,
                     ],
-                    API: `/ip4/${TCP_HOST}/tcp/${IPFS_API_PORT}`,
-                    Gateway: `/ip4/${TCP_HOST}/tcp/${IPFS_GATEWAY_PORT}`,
+                    ...IPFS_ENABLE_API && { API: `/ip4/${TCP_HOST}/tcp/${IPFS_API_PORT}` },
+                    ...IPFS_ENABLE_GATEWAY && { Gateway: `/ip4/${TCP_HOST}/tcp/${IPFS_GATEWAY_PORT}` }
+                    ,
                 },
                 API: {
                     HTTPHeaders: {
@@ -103,11 +106,11 @@ export default class IPFSServer {
             },
         })
 
-        if (!IPFS_GATEWAY_ONLY) {
+        if (IPFS_ENABLE_API) {
           await new HttpApi(ipfs).start()
           console.log('IPFS API server listening on ' + IPFS_API_PORT)
         }
-        if (!IPFS_API_ONLY) {
+        if (IPFS_ENABLE_GATEWAY) {
           await new HttpGateway(ipfs).start()
           console.log('IPFS Gateway server listening on ' + IPFS_GATEWAY_PORT)
         }
