@@ -18,7 +18,6 @@
   "license": "(Apache-2.0 OR MIT)",
   "dependencies": {
     "dag-jose": "^0.3.0",
-    "ipfs": "^0.52.1",
     "ipfs-core": "^0.2.1",
     "ipfs-http-client": "^48.1.1",
     "ipfs-http-gateway": "^0.1.2",

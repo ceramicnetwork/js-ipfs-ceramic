@@ -1,13 +1,17 @@
 import os from 'os-utils'
 import express from "express"
-import { IPFSApi } from "./declarations"
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import type { IPFSAPI as IpfsApi } from 'ipfs-core/dist/src/components'
+export type IpfsApi = typeof IpfsApi
 
 const HEALTHCHECK_ENABLED = process.env.HEALTHCHECK_ENABLED === 'true'
 const HEALTHCHECK_PORT = process.env.HEALTHCHECK_PORT != null ? parseInt(process.env.HEALTHCHECK_PORT) : 8011
 
 export default class HealthcheckServer {
 
-    static start(ipfs: IPFSApi): void {
+    static start(ipfs: IpfsApi): void {
         if (!HEALTHCHECK_ENABLED) {
             return
         }

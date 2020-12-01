@@ -1,5 +1,3 @@
-export type { IPFSAPI as IPFSApi } from 'ipfs-core/dist/src/components'
-
 declare module 'ipfs-http-server' {
     export default class HttpApi {
         constructor(ipfs: IPFSApi, options?: Record<string, any>);
