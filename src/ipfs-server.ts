@@ -32,6 +32,8 @@ const IPFS_GATEWAY_ONLY = process.env.IPFS_GATEWAY_ONLY === 'true'
 
 const IPFS_DHT_SERVER_MODE = process.env.IPFS_DHT_SERVER_MODE === 'true'
 
+const ANNOUNCE_ADDRESS_LIST = process.env.ANNOUNCE_ADDRESS_LIST
+
 export default class IPFSServer {
 
     /**
@@ -50,6 +52,7 @@ export default class IPFSServer {
         multiformats.multicodec.add(dagJose)
         const format = legacy(multiformats, dagJose.name)
 
+        const announceAddresses = ANNOUNCE_ADDRESS_LIST != null ? ANNOUNCE_ADDRESS_LIST.split(',') : []
         const ipfs: IPFSApi = await IPFS.create({
             repo,
             ipld: { formats: [format] },
@@ -61,6 +64,9 @@ export default class IPFSServer {
                         randomWalk: false,
                     },
                 },
+                addresses: {
+                    announce: announceAddresses,
+                }
             },
             config: {
                 Addresses: {
@@ -70,6 +76,26 @@ export default class IPFSServer {
                     ],
                     API: `/ip4/${TCP_HOST}/tcp/${IPFS_API_PORT}`,
                     Gateway: `/ip4/${TCP_HOST}/tcp/${IPFS_GATEWAY_PORT}`,
+                },
+                API: {
+                    HTTPHeaders: {
+                        "Access-Control-Allow-Origin": [
+                            "*"
+                        ],
+                        "Access-Control-Allow-Methods": [
+                            "GET",
+                            "POST"
+                        ],
+                        "Access-Control-Allow-Headers": [
+                            "Authorization"
+                        ],
+                        "Access-Control-Expose-Headers": [
+                            "Location"
+                        ],
+                        "Access-Control-Allow-Credentials": [
+                            "true"
+                        ]
+                    }
                 },
                 Routing: {
                     Type: IPFS_DHT_SERVER_MODE ? 'dhtserver' : 'dhtclient',
