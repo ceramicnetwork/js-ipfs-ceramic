@@ -29,10 +29,10 @@ const IPFS_SWARM_TCP_PORT = process.env.IPFS_SWARM_TCP_PORT || 4011
 const IPFS_SWARM_WS_PORT = process.env.IPFS_SWARM_WS_PORT || 4012
 
 const IPFS_API_PORT = process.env.IPFS_API_PORT || 5011
-const IPFS_ENABLE_API = process.env.IPFS_ENABLE_API === 'true'
+const IPFS_ENABLE_API = process.env.IPFS_ENABLE_API ? process.env.IPFS_ENABLE_API === 'true' : true
 
 const IPFS_GATEWAY_PORT = process.env.IPFS_GATEWAY_PORT || 9011
-const IPFS_ENABLE_GATEWAY = process.env.IPFS_ENABLE_GATEWAY === 'false'
+const IPFS_ENABLE_GATEWAY = process.env.IPFS_ENABLE_GATEWAY ? process.env.IPFS_ENABLE_GATEWAY === 'true' : true
 
 const IPFS_DHT_SERVER_MODE = process.env.IPFS_DHT_SERVER_MODE === 'true'
 
