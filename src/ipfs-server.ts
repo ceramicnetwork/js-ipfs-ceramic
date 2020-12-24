@@ -36,6 +36,9 @@ const IPFS_ENABLE_GATEWAY = process.env.IPFS_ENABLE_GATEWAY ? process.env.IPFS_E
 
 const IPFS_DHT_SERVER_MODE = process.env.IPFS_DHT_SERVER_MODE === 'true'
 
+const IPFS_ENABLE_PUBSUB = process.env.IPFS_ENABLE_PUBSUB === 'true'
+const IPFS_PUBSUB_TOPICS = process.env.IPFS_PUBSUB_TOPICS ? process.env.IPFS_PUBSUB_TOPICS.split(' ') : []
+
 export default class IPFSServer {
 
     /**
@@ -64,6 +67,9 @@ export default class IPFSServer {
                         enabled: true,
                         clientMode: !IPFS_DHT_SERVER_MODE,
                         randomWalk: false,
+                    },
+                    pubsub: {
+                        enabled: IPFS_ENABLE_PUBSUB
                     },
                 },
                 addresses: {
@@ -107,13 +113,17 @@ export default class IPFSServer {
         })
 
         if (IPFS_ENABLE_API) {
-          await new HttpApi(ipfs).start()
-          console.log('IPFS API server listening on ' + IPFS_API_PORT)
+            await new HttpApi(ipfs).start()
+            console.log('IPFS API server listening on ' + IPFS_API_PORT)
         }
         if (IPFS_ENABLE_GATEWAY) {
-          await new HttpGateway(ipfs).start()
-          console.log('IPFS Gateway server listening on ' + IPFS_GATEWAY_PORT)
+            await new HttpGateway(ipfs).start()
+            console.log('IPFS Gateway server listening on ' + IPFS_GATEWAY_PORT)
         }
+
+        IPFS_PUBSUB_TOPICS.forEach((topic: string) => {
+            ipfs.pubsub.subscribe(topic)
+        })
 
         HealthcheckServer.start(ipfs)
     }
