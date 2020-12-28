@@ -121,9 +121,12 @@ export default class IPFSServer {
             console.log('IPFS Gateway server listening on ' + IPFS_GATEWAY_PORT)
         }
 
-        IPFS_PUBSUB_TOPICS.forEach((topic: string) => {
-            ipfs.pubsub.subscribe(topic)
-        })
+        if (IPFS_ENABLE_PUBSUB) {
+            ipfs.pubsub.setMaxListeners(50)
+            IPFS_PUBSUB_TOPICS.forEach((topic: string) => {
+                ipfs.pubsub.subscribe(topic)
+            })
+        }
 
         HealthcheckServer.start(ipfs)
     }
