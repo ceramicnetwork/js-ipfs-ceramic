@@ -19,12 +19,24 @@ export default class HealthcheckServer {
 
         app.get('/', async (req, res) => {
             if (!ipfs.isOnline()) {
-                return res.status(503).send("Service offline")
+                const message = "Service offline"
+                console.error(message)
+                return res.status(503).send(message)
             }
-            const cpuFree: number = await new Promise((resolve) => os.cpuFree(resolve))
-            const memFree = os.freememPercentage()
-            if (cpuFree < 0.05 || memFree < 0.20) {
-                return res.status(503).send("Insufficient memory")
+
+            const maxHealthyCpu = 0.95
+            const maxHealthyMemory = 0.80
+
+            const freeCpu: any = await new Promise((resolve) => os.cpuFree(resolve))
+            const cpuUsage: number = 1 - freeCpu
+
+            const freeMemory = os.freememPercentage()
+            const memUsage: number = 1 - freeMemory
+
+            if (cpuUsage > maxHealthyCpu || memUsage > maxHealthyMemory) {
+                const stats = `cpuUsage=${cpuUsage} maxHealthyCpu=${maxHealthyCpu} freeCpu=${freeCpu} memoryUsage=${memUsage} maxHealthyMemory=${maxHealthyMemory} freeMemory=${freeMemory}`
+                console.error(stats)
+                return res.status(503).send("Insufficient resources")
             }
             return res.status(200).send("Alive")
         })
