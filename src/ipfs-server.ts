@@ -36,7 +36,7 @@ const IPFS_ENABLE_GATEWAY = process.env.IPFS_ENABLE_GATEWAY ? process.env.IPFS_E
 
 const IPFS_DHT_SERVER_MODE = process.env.IPFS_DHT_SERVER_MODE === 'true'
 
-const IPFS_ENABLE_PUBSUB = process.env.IPFS_ENABLE_PUBSUB === 'true'
+const IPFS_ENABLE_PUBSUB = process.env.IPFS_ENABLE_PUBSUB ? process.env.IPFS_ENABLE_PUBSUB === 'true' : true
 const IPFS_PUBSUB_TOPICS = process.env.IPFS_PUBSUB_TOPICS ? process.env.IPFS_PUBSUB_TOPICS.split(' ') : []
 
 export default class IPFSServer {
