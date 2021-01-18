@@ -64,7 +64,7 @@ export default class IPFSServer {
             libp2p: {
                 config: {
                     dht: {
-                        enabled: true,
+                        enabled: false,
                         clientMode: !IPFS_DHT_SERVER_MODE,
                         randomWalk: false,
                     },
