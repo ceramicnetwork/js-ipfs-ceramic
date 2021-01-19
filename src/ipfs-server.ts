@@ -39,6 +39,8 @@ const IPFS_DHT_SERVER_MODE = process.env.IPFS_DHT_SERVER_MODE === 'true'
 const IPFS_ENABLE_PUBSUB = process.env.IPFS_ENABLE_PUBSUB ? process.env.IPFS_ENABLE_PUBSUB === 'true' : true
 const IPFS_PUBSUB_TOPICS = process.env.IPFS_PUBSUB_TOPICS ? process.env.IPFS_PUBSUB_TOPICS.split(' ') : []
 
+const IPFS_BOOTSTRAP = process.env.IPFS_BOOTSTRAP ? process.env.IPFS_BOOTSTRAP.split(' ') : []
+
 export default class IPFSServer {
 
     /**
@@ -109,6 +111,7 @@ export default class IPFSServer {
                 Routing: {
                     Type: IPFS_DHT_SERVER_MODE ? 'dhtserver' : 'dhtclient',
                 },
+                Bootstrap: IPFS_BOOTSTRAP
             },
         })
 
