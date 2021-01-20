@@ -78,6 +78,9 @@ export default class IPFSServer {
                     announce: announceAddresses,
                 }
             },
+            preload: {
+                enabled: false
+            },
             config: {
                 Addresses: {
                     Swarm: [
