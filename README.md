@@ -1,17 +1,5 @@
-# js-ipfs-ceramic
-Wraps js-ipfs instance with dag-jose codec enabled.
+# ⛔️ DEPRECATED
 
-## Usage
+### Up to date versions are now included in [js-ceramic](https://github.com/ceramicnetwork/js-ceramic/tree/develop/packages/ipfs-daemon) and named `ipfs-daemon`
 
-### Public Build
-
-You can use public builds of [js-ipfs-ceramic on Dockerhub](https://hub.docker.com/repository/docker/ceramicnetwork/js-ipfs-ceramic).
-
-
-### Local Build
-
-`git clone <this_repo_url>`
-
-`docker build . -t ipfs`
-
-`docker run -e <var>=<val> -e <var>=<val> ipfs`
+### Public Docker image builds can now be found here: [ipfs-daemon on DockerHub](https://hub.docker.com/repository/docker/ceramicnetwork/ipfs-daemon)
